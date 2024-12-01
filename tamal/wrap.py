@@ -20,3 +20,5 @@ def break_text(
             return text[:index-1], text[index:]
         if char in hyphens:
             return text[:index], text[index:]
+    else:
+        return (text[:width-1] + hyphen, text[width-1:])

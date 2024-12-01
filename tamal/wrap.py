@@ -13,3 +13,10 @@ def break_text(
 ) -> tuple[Head, Tail]:
     if len(text) <= width:
         return text, ""
+
+    for (reverse_index, char) in enumerate(reversed(text[:width])):
+        index = width - reverse_index
+        if char == " ":
+            return text[:index-1], text[index:]
+        if char in hyphens:
+            return text[:index], text[index:]

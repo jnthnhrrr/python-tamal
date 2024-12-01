@@ -9,3 +9,15 @@ class TestBreakText(TestCase):
         result = break_text(text, 100)
         expected = ("A line breaking experience", "")
         self.assert_equal(result, expected)
+
+    def test_uses_whitespace(self):
+        text = "A line breaking experience"
+        result = break_text(text, 11)
+        expected = ("A line", "breaking experience")
+        self.assert_equal(result, expected)
+
+    def test_uses_existing_hyphen(self):
+        text = "A line-breaking experience"
+        result = break_text(text, 11)
+        expected = ("A line-", "breaking experience")
+        self.assert_equal(result, expected)

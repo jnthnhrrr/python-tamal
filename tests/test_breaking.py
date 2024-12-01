@@ -27,3 +27,9 @@ class TestBreakText(TestCase):
         result = break_text(text, 5)
         expected = ("Some-", "LongWord")
         self.assert_equal(result, expected)
+
+    def test_uses_existing_soft_hyphen(self):
+        text = "A line breaking ex·perience"
+        result = break_text(text, 21)
+        expected = ("A line breaking ex-" , "perience")
+        self.assert_equal(result, expected)

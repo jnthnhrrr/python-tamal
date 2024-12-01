@@ -33,3 +33,9 @@ class TestBreakText(TestCase):
         result = break_text(text, 21)
         expected = ("A line breaking ex-" , "perience")
         self.assert_equal(result, expected)
+
+    def test_uses_custom_hyphenation_character(self):
+        text = "SomeLongWord"
+        result = break_text(text, 5, hyphen="~")
+        expected = ("Some~", "LongWord")
+        self.assert_equal(result, expected)

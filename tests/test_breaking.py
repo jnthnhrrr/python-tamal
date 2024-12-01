@@ -21,3 +21,9 @@ class TestBreakText(TestCase):
         result = break_text(text, 11)
         expected = ("A line-", "breaking experience")
         self.assert_equal(result, expected)
+
+    def test_forces_break(self):
+        text = "SomeLongWord"
+        result = break_text(text, 5)
+        expected = ("Some-", "LongWord")
+        self.assert_equal(result, expected)

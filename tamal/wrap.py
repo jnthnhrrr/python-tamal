@@ -1,5 +1,5 @@
 from typing import TypeAlias
-from .defaults import DEFAULT_HYPHEN, DEFAULT_HYPHENS, DEFAULT_SOFT_HYPHENS
+from .defaults import DEFAULT_HYPHEN, DEFAULT_HYPHENS, DEFAULT_SOFT_HYPHEN
 
 Head: TypeAlias = str
 Tail: TypeAlias = str
@@ -8,8 +8,8 @@ def break_text(
     text: str,
     width: int,
     hyphen: str = DEFAULT_HYPHEN,
+    soft_hyphen: str = DEFAULT_SOFT_HYPHEN,
     hyphens: set[str] = DEFAULT_HYPHENS,
-    soft_hyphens: set[str] = DEFAULT_SOFT_HYPHENS,
 ) -> tuple[Head, Tail]:
     if len(text) <= width:
         return text, ""
@@ -20,7 +20,7 @@ def break_text(
             return text[:index-1], text[index:]
         if char in hyphens:
             return text[:index], text[index:]
-        if char in soft_hyphens:
+        if char == soft_hyphen:
             return text[:index-1] + hyphen, text[index:]
 
     return (text[:width-1] + hyphen, text[width-1:])

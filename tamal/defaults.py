@@ -5,6 +5,4 @@ DEFAULT_HYPHENS = {
     "–",  # en-dash
     "—",  # em-dash
 }
-DEFAULT_SOFT_HYPHENS = {
-    "·",
-}
+DEFAULT_SOFT_HYPHEN = "·"

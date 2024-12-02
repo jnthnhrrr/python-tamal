@@ -64,3 +64,15 @@ class TestBreakText(TestCase):
         result = break_text(text, 3)
         expected = ("He--", "llo")
         self.assert_equal(result, expected)
+
+    def test_breaks_at_tab_and_removes_leading_tab(self):
+        text = "A line\tbreaking experience"
+        result = break_text(text, 11)
+        expected = ("A line", "breaking experience")
+        self.assert_equal(result, expected)
+
+    def test_breaks_and_removes_custom_multichar_whitespace(self):
+        text = "A line__breaking experience"
+        result = break_text(text, 11, whitespace={"__"})
+        expected = ("A line", "breaking experience")
+        self.assert_equal(result, expected)

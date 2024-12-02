@@ -1,5 +1,4 @@
 from re import search
-from types import new_class
 from typing import TypeAlias
 
 from .defaults import DEFAULT_HYPHEN, DEFAULT_HYPHENS, DEFAULT_SOFT_HYPHEN
@@ -24,7 +23,7 @@ def _visible_index(text: str, length: int, soft_hyphen: str) -> int:
     return index
 
 
-def _latest_occurence(pattern: str, text: str) -> int:
+def _latest_occurrence(pattern: str, text: str) -> int:
     """index of start of latest occurrence of pattern in text"""
     match = search(f"(?s:.*){pattern}", text)
     if match:
@@ -48,7 +47,7 @@ def break_text(
         list(hyphens | {soft_hyphen, " "}), key=lambda s: len(s)
     )
     break_indices = {
-        _latest_occurence(char, text[: width + len(char) - 1]): char
+        _latest_occurrence(char, text[: width + len(char) - 1]): char
         for char in break_strings
     }
     break_index = max(break_indices.keys())

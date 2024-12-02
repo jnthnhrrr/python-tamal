@@ -25,9 +25,10 @@ def _visible_index(text: str, length: int, soft_hyphen: str) -> int:
 
 
 def _latest_occurence(pattern: str, text: str) -> int:
+    """index of start of latest occurrence of pattern in text"""
     match = search(f"(?s:.*){pattern}", text)
     if match:
-        return match.end()
+        return match.end() - len(pattern)
     return 0
 
 
@@ -42,9 +43,13 @@ def break_text(
     width = _visible_index(text, width, soft_hyphen)
     if len(text) <= width:
         return text, ""
+    # Sorting break_strings so that longer hyphens prevail in break_indices
+    break_strings = sorted(
+        list(hyphens | {soft_hyphen, " "}), key=lambda s: len(s)
+    )
     break_indices = {
-        _latest_occurence(char, text[:width]): char
-        for char in hyphens | {soft_hyphen, " "}
+        _latest_occurence(char, text[: width + len(char) - 1]): char
+        for char in break_strings
     }
     break_index = max(break_indices.keys())
     if not break_index:
@@ -52,12 +57,13 @@ def break_text(
 
     char = break_indices[break_index]
     if char == " ":
-        return text[: break_index - 1], text[break_index:]
+        return text[:break_index], text[break_index + 1 :]
     if char in hyphens:
-        return text[:break_index], text[break_index:]
+        return text[: break_index + len(char)], text[break_index + len(char) :]
     if char == soft_hyphen:
-        break_index = break_index - len(soft_hyphen)
+        # Replacing the soft hyphen with a hyphen when breaking at it
         return (
             text[:break_index] + hyphen,
-            text[break_index + len(soft_hyphen) :],
+            text[break_index + len(char) :],
         )
+    raise Exception("Shouldn't be getting here")

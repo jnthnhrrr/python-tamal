@@ -4,9 +4,9 @@ TESTS = tests
 
 .PHONY: test typecheck coverage lint format pretty check build publish
 
-test: TEST="$(TESTS)"
+test: T="$(TESTS)"
 test:
-	poetry run pytest "$(TEST)"
+	poetry run pytest "$(T)"
 
 typecheck:
 	poetry run mypy "$(LIBRARY)" --strict

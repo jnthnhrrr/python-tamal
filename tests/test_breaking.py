@@ -52,3 +52,9 @@ class TestBreakText(TestCase):
         result = break_text(text, 3, soft_hyphen="~")
         expected = ("~~~~~He-", "llo")
         self.assert_equal(result, expected)
+
+    def test_breaks_at_multichar_soft_hypen(self):
+        text = "He~~llo"
+        result = break_text(text, 3, soft_hyphen="~~")
+        expected = ("He-", "llo")
+        self.assert_equal(result, expected)

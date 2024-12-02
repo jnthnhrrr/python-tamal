@@ -1,7 +1,7 @@
 from re import search
 from typing import TypeAlias
 
-from .defaults import DEFAULT_HYPHEN, DEFAULT_HYPHENS, DEFAULT_SOFT_HYPHEN
+from .defaults import DEFAULT_HYPHEN, DEFAULT_HYPHENS, DEFAULT_SOFT_HYPHEN, DEFAULT_WHITESPACE
 
 Head: TypeAlias = str
 Tail: TypeAlias = str
@@ -37,6 +37,7 @@ def break_text(
     hyphen: str = DEFAULT_HYPHEN,
     soft_hyphen: str = DEFAULT_SOFT_HYPHEN,
     hyphens: set[str] = DEFAULT_HYPHENS,
+    whitespace: set[str] = DEFAULT_WHITESPACE,
 ) -> tuple[Head, Tail]:
     hyphens.add(hyphen)
     width = _visible_index(text, width, soft_hyphen)
@@ -44,7 +45,7 @@ def break_text(
         return text, ""
     # Sorting break_strings so that longer hyphens prevail in break_indices
     break_strings = sorted(
-        list(hyphens | {soft_hyphen, " "}), key=lambda s: len(s)
+        list(hyphens | {soft_hyphen} | whitespace), key=lambda s: len(s)
     )
     break_indices = {
         _latest_occurrence(char, text[: width + len(char) - 1]): char
@@ -55,10 +56,14 @@ def break_text(
         return (text[: width - 1] + hyphen, text[width - 1 :])
 
     char = break_indices[break_index]
-    if char == " ":
-        return text[:break_index], text[break_index + 1 :]
+    if char in whitespace:
+        return text[:break_index], text[break_index + len(char) :]
     if char in hyphens:
-        return text[: break_index + len(char)], text[break_index + len(char) :]
+        break_index += len(char)
+        return (
+            text[: break_index ],
+            text[break_index :]
+        )
     if char == soft_hyphen:
         # Replacing the soft hyphen with a hyphen when breaking at it
         return (

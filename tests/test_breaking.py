@@ -1,6 +1,6 @@
 from uneedtest import TestCase
 
-from tamal.wrap import break_text
+from tamal.wrap import break_all, break_text
 
 
 class TestBreakText(TestCase):
@@ -11,9 +11,21 @@ class TestBreakText(TestCase):
         expected = ("A line breaking experience", "")
         self.assert_equal(result, expected)
 
-    def test_breaks_at_whitespace_and_removes_leading_whitespace(self):
+    def test_breaks_and_removes_whitespace(self):
         text = "A line breaking experience"
         result = break_text(text, 11)
+        expected = ("A line", "breaking experience")
+        self.assert_equal(result, expected)
+
+    def test_breaks_and_removes_tab(self):
+        text = "A line\tbreaking experience"
+        result = break_text(text, 11)
+        expected = ("A line", "breaking experience")
+        self.assert_equal(result, expected)
+
+    def test_breaks_and_removes_custom_multichar_whitespace(self):
+        text = "A line__breaking experience"
+        result = break_text(text, 11, whitespace={"__"})
         expected = ("A line", "breaking experience")
         self.assert_equal(result, expected)
 
@@ -65,14 +77,14 @@ class TestBreakText(TestCase):
         expected = ("He--", "llo")
         self.assert_equal(result, expected)
 
-    def test_breaks_at_tab_and_removes_leading_tab(self):
-        text = "A line\tbreaking experience"
-        result = break_text(text, 11)
-        expected = ("A line", "breaking experience")
-        self.assert_equal(result, expected)
 
-    def test_breaks_and_removes_custom_multichar_whitespace(self):
-        text = "A line__breaking experience"
-        result = break_text(text, 11, whitespace={"__"})
-        expected = ("A line", "breaking experience")
+class TestBreakAll(TestCase):
+    def test_fills_broken_line(self):
+        text = "A truly line breaking experience,\nfulfilling and rewarding."
+        result = break_all(text, width=25)
+        expected = [
+            "A truly line breaking",
+            "experience, fulfilling",
+            "and rewarding.",
+        ]
         self.assert_equal(result, expected)

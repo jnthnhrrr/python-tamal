@@ -1,0 +1,20 @@
+site_name: tamal
+
+theme:
+  name: material
+  palette:
+    primary: pink
+    accent: teal
+
+plugins:
+  search:
+  mkdocstrings:
+    handlers:
+      python:
+        options:
+          show_root_heading: true
+          separate_signature: true
+          unwrap_annotated: true
+          signature_crossrefs: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true

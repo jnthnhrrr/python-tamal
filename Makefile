@@ -1,8 +1,7 @@
-
 LIBRARY = tamal
 TESTS = tests
 
-.PHONY: test typecheck coverage lint format pretty check build publish
+.PHONY: test typecheck coverage lint format pretty check docs build publish
 
 test: T="$(TESTS)"
 test:
@@ -12,7 +11,7 @@ typecheck:
 	poetry run mypy "$(LIBRARY)" --strict
 
 coverage:
-		poetry run pytest --cov="$(LIBRARY)" "$(TESTS)" --cov-branch
+	poetry run pytest --cov="$(LIBRARY)" "$(TESTS)" --cov-branch
 
 lint:
 	poetry run ruff check --fix "$(TESTS)"
@@ -26,10 +25,18 @@ format:
 
 check: lint typecheck coverage
 
+docs:
+	poetry run python tamal/_wrap.py
+	poetry run mkdocs serve
+
+build: format lint typecheck coverage
+	poetry build
+
 publish: VERSION=$(shell poetry version -s)
-publish:
+publish: build
 	git add .
 	git commit --allow-empty -m "v${VERSION}"
 	git tag -a "v${VERSION}" -m "v${VERSION}"
 	git push --follow-tags
-	poetry publish --build
+	poetry publish
+	poetry run mkdocs gh-deploy

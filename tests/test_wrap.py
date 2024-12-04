@@ -1,6 +1,6 @@
 from uneedtest import TestCase
 
-from tamal.wrap import wrap
+from tamal import wrap
 
 
 class TestWrap(TestCase):

@@ -1,87 +1,87 @@
 from uneedtest import TestCase
 
-from tamal.wrap import break_all, break_text
+from tamal import break_lines, chunk
 
 
-class TestBreakText(TestCase):
+class TestChunk(TestCase):
 
     def test_does_not_break_when_not_necessary(self):
         text = "A line breaking experience"
-        result = break_text(text, 100)
+        result = chunk(text, 100)
         expected = ("A line breaking experience", "")
         self.assert_equal(result, expected)
 
-    def test_breaks_and_removes_whitespace(self):
+    def test_breaks_and_removes_whitespaces(self):
         text = "A line breaking experience"
-        result = break_text(text, 11)
+        result = chunk(text, 11)
         expected = ("A line", "breaking experience")
         self.assert_equal(result, expected)
 
     def test_breaks_and_removes_tab(self):
         text = "A line\tbreaking experience"
-        result = break_text(text, 11)
+        result = chunk(text, 11)
         expected = ("A line", "breaking experience")
         self.assert_equal(result, expected)
 
-    def test_breaks_and_removes_custom_multichar_whitespace(self):
+    def test_breaks_and_removes_custom_multichar_whitespaces(self):
         text = "A line__breaking experience"
-        result = break_text(text, 11, whitespace={"__"})
+        result = chunk(text, 11, whitespaces={"__"})
         expected = ("A line", "breaking experience")
         self.assert_equal(result, expected)
 
     def test_breaks_at_existing_hyphen(self):
         text = "A line-breaking experience"
-        result = break_text(text, 11)
+        result = chunk(text, 11)
         expected = ("A line-", "breaking experience")
         self.assert_equal(result, expected)
 
     def test_forces_break(self):
         text = "SomeLongWord"
-        result = break_text(text, 5)
+        result = chunk(text, 5)
         expected = ("Some-", "LongWord")
         self.assert_equal(result, expected)
 
     def test_breaks_at_existing_soft_hyphen(self):
         text = "A line breaking ex·perience"
-        result = break_text(text, 21)
+        result = chunk(text, 21)
         expected = ("A line breaking ex-", "perience")
         self.assert_equal(result, expected)
 
     def test_breaks_at_custom_hyphenation_character(self):
         text = "SomeLongWord"
-        result = break_text(text, 5, hyphen="0")
+        result = chunk(text, 5, hyphen="0")
         expected = ("Some0", "LongWord")
         self.assert_equal(result, expected)
 
     def test_does_not_count_soft_hyphens_against_full_width(self):
         text = "·····Hello"
-        result = break_text(text, 5)
+        result = chunk(text, 5)
         expected = ("·····Hello", "")
         self.assert_equal(result, expected)
 
     def test_does_not_count_soft_hyphens_when_breaking_at_index(self):
         text = "·····He·llo"
-        result = break_text(text, 3)
+        result = chunk(text, 3)
         expected = ("·····He-", "llo")
         self.assert_equal(result, expected)
 
     def test_breaks_at_multichar_soft_hyphen(self):
         text = "He··llo"
-        result = break_text(text, 3, soft_hyphen="··")
+        result = chunk(text, 3, soft_hyphen="··")
         expected = ("He-", "llo")
         self.assert_equal(result, expected)
 
     def test_breaks_at_multichar_hyphen(self):
         text = "He--llo"
-        result = break_text(text, 3)
+        result = chunk(text, 3, hyphens={"--"})
         expected = ("He--", "llo")
         self.assert_equal(result, expected)
 
 
-class TestBreakAll(TestCase):
+class TestBreakLines(TestCase):
     def test_fills_broken_line(self):
         text = "A truly line breaking experience,\nfulfilling and rewarding."
-        result = break_all(text, width=25)
+        result = break_lines(text, width=25)
         expected = [
             "A truly line breaking",
             "experience, fulfilling",

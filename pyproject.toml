@@ -1,3 +1,4 @@
+[project]
 authors = [
   {name = "Jonathan Herrera", email = "jonathan.herrera@posteo.de"},
 ]
@@ -12,18 +13,17 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 
-[project.urls]
-Homepage = 'https://github.com/jnthnhrrr/python-tamal'
-Code = 'https://github.com/jnthnhrrr/python-tamal'
-Documentation = 'https://jnthnhrrr.github.io/python-tamal'
-Issues = 'https://github.com/jnthnhrrr/python-tamal/issues'
-
 [tool.poetry]
 name = "tamal"
-version = "0.1.0"
+version = "0.1.1"
 description = "A library for wrapping text"
 authors = ["Jonathan Herrera <jonathan.herrera@posteo.de>"]
 readme = "README.md"
+
+[tool.poetry.urls]
+source = 'https://github.com/jnthnhrrr/python-tamal'
+docs = 'https://jnthnhrrr.github.io/python-tamal'
+bugs = 'https://github.com/jnthnhrrr/python-tamal/issues'
 
 [tool.poetry.dependencies]
 python = "^3.12"

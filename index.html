@@ -1204,6 +1204,7 @@ paragraph marker.</p>
     <span class="n">hyphens</span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="tamal.defaults.DEFAULT_HYPHENS" href="#tamal.defaults.DEFAULT_HYPHENS">DEFAULT_HYPHENS</a></span><span class="p">,</span>
     <span class="n">whitespaces</span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="tamal.defaults.DEFAULT_WHITESPACES" href="#tamal.defaults.DEFAULT_WHITESPACES">DEFAULT_WHITESPACES</a></span><span class="p">,</span>
     <span class="n">paragraph</span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="tamal.defaults.DEFAULT_PARAGRAPH" href="#tamal.defaults.DEFAULT_PARAGRAPH">DEFAULT_PARAGRAPH</a></span><span class="p">,</span>
+    <span class="n">new_paragraph</span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="tamal.defaults.DEFAULT_PARAGRAPH" href="#tamal.defaults.DEFAULT_PARAGRAPH">DEFAULT_PARAGRAPH</a></span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -1336,10 +1337,27 @@ be multi-character strings.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Marker for the beginning of a new paragraph. Paragraphs will
-remain in the text when wrapping. If you want to treat existing
-line breaks as "hard" line breaks, use the line break chacter as
-paragraph marker.</p>
+                <p>Marker for the beginning of a new paragraph. Paragraphs
+marked as such will be represented as paragraphs in the wrapped
+result. If you want to treat existing line breaks as "hard" line
+breaks, use the line break chacter both as paragraph marker and as
+argument for new_paragraph.</p>
+              </div>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="tamal.defaults.DEFAULT_PARAGRAPH" href="#tamal.defaults.DEFAULT_PARAGRAPH">DEFAULT_PARAGRAPH</a></code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>new_paragraph</code>
+            </td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The string to mark a paragraph in the wrapped result.</p>
               </div>
             </td>
             <td>
@@ -1453,7 +1471,10 @@ is a bit long.
 <span class="normal">247</span>
 <span class="normal">248</span>
 <span class="normal">249</span>
-<span class="normal">250</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">hyphen</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_HYPHEN</span><span class="p">,</span>
@@ -1461,6 +1482,7 @@ is a bit long.
     <span class="n">hyphens</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_HYPHENS</span><span class="p">,</span>
     <span class="n">whitespaces</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_WHITESPACES</span><span class="p">,</span>
     <span class="n">paragraph</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_PARAGRAPH</span><span class="p">,</span>
+    <span class="n">new_paragraph</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_PARAGRAPH</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters:</span>
@@ -1485,10 +1507,13 @@ is a bit long.
 <span class="sd">            whitespace strings at the end of a broken line will be removed. Can</span>
 <span class="sd">            be multi-character strings.</span>
 
-<span class="sd">        paragraph: Marker for the beginning of a new paragraph. Paragraphs will</span>
-<span class="sd">            remain in the text when wrapping. If you want to treat existing</span>
-<span class="sd">            line breaks as &quot;hard&quot; line breaks, use the line break chacter as</span>
-<span class="sd">            paragraph marker.</span>
+<span class="sd">        paragraph: Marker for the beginning of a new paragraph. Paragraphs</span>
+<span class="sd">            marked as such will be represented as paragraphs in the wrapped</span>
+<span class="sd">            result. If you want to treat existing line breaks as &quot;hard&quot; line</span>
+<span class="sd">            breaks, use the line break chacter both as paragraph marker and as</span>
+<span class="sd">            argument for new_paragraph.</span>
+
+<span class="sd">        new_paragraph: The string to mark a paragraph in the wrapped result.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The wrapped text as a string.</span>
@@ -1506,13 +1531,11 @@ is a bit long.
 
 <span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">chunks</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">paragraph</span><span class="p">)</span>
-    <span class="n">wrapped_chunks</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
-        <span class="n">wrapped_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">new_paragraph</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span>
             <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="n">break_lines</span><span class="p">(</span>
-                    <span class="n">chunk</span><span class="p">,</span>
+                    <span class="n">p</span><span class="p">,</span>
                     <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
                     <span class="n">hyphen</span><span class="o">=</span><span class="n">hyphen</span><span class="p">,</span>
                     <span class="n">soft_hyphen</span><span class="o">=</span><span class="n">soft_hyphen</span><span class="p">,</span>
@@ -1520,8 +1543,9 @@ is a bit long.
                     <span class="n">whitespaces</span><span class="o">=</span><span class="n">whitespaces</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-        <span class="p">)</span>
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wrapped_chunks</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">paragraph</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

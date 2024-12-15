@@ -187,6 +187,7 @@ def wrap(
     hyphens: set[str] = DEFAULT_HYPHENS,
     whitespaces: set[str] = DEFAULT_WHITESPACES,
     paragraph: str = DEFAULT_PARAGRAPH,
+    new_paragraph: str = DEFAULT_PARAGRAPH,
 ) -> str:
     """
     Parameters:
@@ -211,10 +212,13 @@ def wrap(
             whitespace strings at the end of a broken line will be removed. Can
             be multi-character strings.
 
-        paragraph: Marker for the beginning of a new paragraph. Paragraphs will
-            remain in the text when wrapping. If you want to treat existing
-            line breaks as "hard" line breaks, use the line break chacter as
-            paragraph marker.
+        paragraph: Marker for the beginning of a new paragraph. Paragraphs
+            marked as such will be represented as paragraphs in the wrapped
+            result. If you want to treat existing line breaks as "hard" line
+            breaks, use the line break chacter both as paragraph marker and as
+            argument for new_paragraph.
+
+        new_paragraph: The string to mark a paragraph in the wrapped result.
 
     Returns:
         The wrapped text as a string.
@@ -232,13 +236,11 @@ def wrap(
 
     ```
     """
-    chunks = text.split(paragraph)
-    wrapped_chunks = []
-    for chunk in chunks:
-        wrapped_chunks.append(
+    return new_paragraph.join(
+        [
             "\n".join(
                 break_lines(
-                    chunk,
+                    p,
                     width=width,
                     hyphen=hyphen,
                     soft_hyphen=soft_hyphen,
@@ -246,9 +248,6 @@ def wrap(
                     whitespaces=whitespaces,
                 )
             )
-        )
-    return "\n\n".join(wrapped_chunks)
-
-
-if __name__ == "__main__":
-    pass
+            for p in text.split(paragraph)
+        ]
+    )
